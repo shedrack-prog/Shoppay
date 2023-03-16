@@ -1,29 +1,29 @@
-import styles from "../styles/browse.module.scss";
-import db from "../utils/db";
-import Product from "../models/Product";
-import Category from "../models/Category";
-import Header from "../components/header";
-import SubCategory from "../models/SubCategory";
+import styles from '../styles/browse.module.scss';
+import db from '../utils/db';
+import Product from '../models/Product';
+import Category from '../models/Category';
+import Header from '../components/header';
+import SubCategory from '../models/SubCategory';
 import {
   filterArray,
   randomize,
   removeDuplicates,
-} from "../utils/arrays_utils";
-import Link from "next/link";
-import ProductCard from "../components/ProductCard";
-import CategoryFilter from "../components/browse/categoryFilter";
-import SizesFilter from "../components/browse/sizesFilter";
-import ColorsFilter from "../components/browse/colorsFilter";
-import BrandsFilter from "../components/browse/brandsFilter";
-import StylesFilter from "../components/browse/stylesFilter";
-import PatternsFilter from "../components/browse/patternsFilter";
-import MaterialsFilter from "../components/browse/materialsFilter";
-import GenderFilter from "../components/browse/genderFilter";
-import HeadingFilters from "../components/browse/headingFilters";
-import { useRouter } from "next/router";
-import { Pagination } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+} from '../utils/arrays_utils';
+import Link from 'next/link';
+import ProductCard from '../components/ProductCard';
+import CategoryFilter from '../components/browse/categoryFilter';
+import SizesFilter from '../components/browse/sizesFilter';
+import ColorsFilter from '../components/browse/colorsFilter';
+import BrandsFilter from '../components/browse/brandsFilter';
+import StylesFilter from '../components/browse/stylesFilter';
+import PatternsFilter from '../components/browse/patternsFilter';
+import MaterialsFilter from '../components/browse/materialsFilter';
+import GenderFilter from '../components/browse/genderFilter';
+import HeadingFilters from '../components/browse/headingFilters';
+import { useRouter } from 'next/router';
+import { Pagination } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 export default function Browse({
   categories,
   subCategories,
@@ -76,7 +76,7 @@ export default function Browse({
     });
   };
   const searchHandler = (search) => {
-    if (search == "") {
+    if (search == '') {
       filter({ search: {} });
     } else {
       filter({ search });
@@ -104,18 +104,18 @@ export default function Browse({
     filter({ material });
   };
   const genderHandler = (gender) => {
-    if (gender == "Unisex") {
+    if (gender == 'Unisex') {
       filter({ gender: {} });
     } else {
       filter({ gender });
     }
   };
   const priceHandler = (price, type) => {
-    let priceQuery = router.query.price?.split("_") || "";
-    let min = priceQuery[0] || "";
-    let max = priceQuery[1] || "";
-    let newPrice = "";
-    if (type == "min") {
+    let priceQuery = router.query.price?.split('_') || '';
+    let min = priceQuery[0] || '';
+    let max = priceQuery[1] || '';
+    let newPrice = '';
+    if (type == 'min') {
       newPrice = `${price}_${max}`;
     } else {
       newPrice = `${min}_${price}`;
@@ -132,7 +132,7 @@ export default function Browse({
     filter({ rating });
   };
   const sortHandler = (sort) => {
-    if (sort == "") {
+    if (sort == '') {
       filter({ sort: {} });
     } else {
       filter({ sort });
@@ -152,18 +152,18 @@ export default function Browse({
     const existedQuery = router.query[queryName];
     const valueCheck = existedQuery?.search(value);
     const _check = existedQuery?.search(`_${value}`);
-    let result = "";
+    let result = '';
     if (existedQuery) {
       if (existedQuery == value) {
         result = {};
       } else {
         if (valueCheck !== -1) {
           if (_check !== -1) {
-            result = existedQuery?.replace(`_${value}`, "");
+            result = existedQuery?.replace(`_${value}`, '');
           } else if (valueCheck == 0) {
-            result = existedQuery?.replace(`${value}_`, "");
+            result = existedQuery?.replace(`${value}_`, '');
           } else {
-            result = existedQuery?.replace(value, "");
+            result = existedQuery?.replace(value, '');
           }
         } else {
           result = `${existedQuery}_${value}`;
@@ -182,15 +182,16 @@ export default function Browse({
   const [height, setHeight] = useState(0);
   const headerRef = useRef(null);
   const el = useRef(null);
+  console.log(el);
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     setHeight(headerRef.current?.offsetHeight + el.current?.offsetHeight);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
   console.log(scrollY, height);
@@ -213,7 +214,7 @@ export default function Browse({
         </div>
         <div
           className={`${styles.browse__store} ${
-            scrollY >= height ? styles.fixed : ""
+            scrollY >= height ? styles.fixed : ''
           }`}
         >
           <div
@@ -221,7 +222,7 @@ export default function Browse({
           >
             <button
               className={styles.browse__clearBtn}
-              onClick={() => router.push("/browse")}
+              onClick={() => router.push('/browse')}
             >
               Clear All ({Object.keys(router.query).length})
             </button>
@@ -295,136 +296,136 @@ export default function Browse({
 export async function getServerSideProps(ctx) {
   const { query } = ctx;
   //-------------------------------------------------->
-  const searchQuery = query.search || "";
-  const categoryQuery = query.category || "";
-  const genderQuery = query.gender || "";
-  const priceQuery = query.price?.split("_") || "";
+  const searchQuery = query.search || '';
+  const categoryQuery = query.category || '';
+  const genderQuery = query.gender || '';
+  const priceQuery = query.price?.split('_') || '';
   const shippingQuery = query.shipping || 0;
-  const ratingQuery = query.rating || "";
-  const sortQuery = query.sort || "";
+  const ratingQuery = query.rating || '';
+  const sortQuery = query.sort || '';
   const pageSize = 50;
   const page = query.page || 1;
 
   //-----------
-  const brandQuery = query.brand?.split("_") || "";
+  const brandQuery = query.brand?.split('_') || '';
   const brandRegex = `^${brandQuery[0]}`;
   const brandSearchRegex = createRegex(brandQuery, brandRegex);
   //-----------
   //-----------
-  const styleQuery = query.style?.split("_") || "";
+  const styleQuery = query.style?.split('_') || '';
   const styleRegex = `^${styleQuery[0]}`;
   const styleSearchRegex = createRegex(styleQuery, styleRegex);
   //-----------
   //-----------
-  const patternQuery = query.pattern?.split("_") || "";
+  const patternQuery = query.pattern?.split('_') || '';
   const patternRegex = `^${patternQuery[0]}`;
   const patternSearchRegex = createRegex(patternQuery, patternRegex);
   //-----------
   //-----------
-  const materialQuery = query.material?.split("_") || "";
+  const materialQuery = query.material?.split('_') || '';
   const materialRegex = `^${materialQuery[0]}`;
   const materialSearchRegex = createRegex(materialQuery, materialRegex);
   //-----------
-  const sizeQuery = query.size?.split("_") || "";
+  const sizeQuery = query.size?.split('_') || '';
   const sizeRegex = `^${sizeQuery[0]}`;
   const sizeSearchRegex = createRegex(sizeQuery, sizeRegex);
   //-----------
-  const colorQuery = query.color?.split("_") || "";
+  const colorQuery = query.color?.split('_') || '';
   const colorRegex = `^${colorQuery[0]}`;
   const colorSearchRegex = createRegex(colorQuery, colorRegex);
   //-------------------------------------------------->
   const search =
-    searchQuery && searchQuery !== ""
+    searchQuery && searchQuery !== ''
       ? {
           name: {
             $regex: searchQuery,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const category =
-    categoryQuery && categoryQuery !== "" ? { category: categoryQuery } : {};
+    categoryQuery && categoryQuery !== '' ? { category: categoryQuery } : {};
 
   const style =
-    styleQuery && styleQuery !== ""
+    styleQuery && styleQuery !== ''
       ? {
-          "details.value": {
+          'details.value': {
             $regex: styleSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const size =
-    sizeQuery && sizeQuery !== ""
+    sizeQuery && sizeQuery !== ''
       ? {
-          "subProducts.sizes.size": {
+          'subProducts.sizes.size': {
             $regex: sizeSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const color =
-    colorQuery && colorQuery !== ""
+    colorQuery && colorQuery !== ''
       ? {
-          "subProducts.color.color": {
+          'subProducts.color.color': {
             $regex: colorSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const brand =
-    brandQuery && brandQuery !== ""
+    brandQuery && brandQuery !== ''
       ? {
           brand: {
             $regex: brandSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const pattern =
-    patternQuery && patternQuery !== ""
+    patternQuery && patternQuery !== ''
       ? {
-          "details.value": {
+          'details.value': {
             $regex: patternSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const material =
-    materialQuery && materialQuery !== ""
+    materialQuery && materialQuery !== ''
       ? {
-          "details.value": {
+          'details.value': {
             $regex: materialSearchRegex,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const gender =
-    genderQuery && genderQuery !== ""
+    genderQuery && genderQuery !== ''
       ? {
-          "details.value": {
+          'details.value': {
             $regex: genderQuery,
-            $options: "i",
+            $options: 'i',
           },
         }
       : {};
   const price =
-    priceQuery && priceQuery !== ""
+    priceQuery && priceQuery !== ''
       ? {
-          "subProducts.sizes.price": {
+          'subProducts.sizes.price': {
             $gte: Number(priceQuery[0]) || 0,
             $lte: Number(priceQuery[1]) || Infinity,
           },
         }
       : {};
   const shipping =
-    shippingQuery && shippingQuery == "0"
+    shippingQuery && shippingQuery == '0'
       ? {
           shipping: 0,
         }
       : {};
   const rating =
-    ratingQuery && ratingQuery !== ""
+    ratingQuery && ratingQuery !== ''
       ? {
           rating: {
             $gte: Number(ratingQuery),
@@ -432,20 +433,20 @@ export async function getServerSideProps(ctx) {
         }
       : {};
   const sort =
-    sortQuery == ""
+    sortQuery == ''
       ? {}
-      : sortQuery == "popular"
-      ? { rating: -1, "subProducts.sold": -1 }
-      : sortQuery == "newest"
+      : sortQuery == 'popular'
+      ? { rating: -1, 'subProducts.sold': -1 }
+      : sortQuery == 'newest'
       ? { createdAt: -1 }
-      : sortQuery == "topSelling"
-      ? { "subProducts.sold": -1 }
-      : sortQuery == "topReviewed"
+      : sortQuery == 'topSelling'
+      ? { 'subProducts.sold': -1 }
+      : sortQuery == 'topReviewed'
       ? { rating: -1 }
-      : sortQuery == "priceHighToLow"
-      ? { "subProducts.sizes.price": -1 }
-      : sortQuery == "priceLowToHigh"
-      ? { "subProducts.sizes.price": 1 }
+      : sortQuery == 'priceHighToLow'
+      ? { 'subProducts.sizes.price': -1 }
+      : sortQuery == 'priceLowToHigh'
+      ? { 'subProducts.sizes.price': 1 }
       : {};
   //-------------------------------------------------->
   //-------------------------------------------------->
@@ -458,7 +459,7 @@ export async function getServerSideProps(ctx) {
     return styleRegex;
   }
   let data = await axios
-    .get("https://api.ipregistry.co/?key=r208izz0q0icseks")
+    .get('https://api.ipregistry.co/?key=r208izz0q0icseks')
     .then((res) => {
       return res.data.location.country;
     })
@@ -486,25 +487,25 @@ export async function getServerSideProps(ctx) {
     .sort(sort)
     .lean();
   let products =
-    sortQuery && sortQuery !== "" ? productsDb : randomize(productsDb);
+    sortQuery && sortQuery !== '' ? productsDb : randomize(productsDb);
   let categories = await Category.find().lean();
   let subCategories = await SubCategory.find()
     .populate({
-      path: "parent",
+      path: 'parent',
       model: Category,
     })
     .lean();
   let colors = await Product.find({ ...category }).distinct(
-    "subProducts.color.color"
+    'subProducts.color.color'
   );
-  let brandsDb = await Product.find({ ...category }).distinct("brand");
+  let brandsDb = await Product.find({ ...category }).distinct('brand');
   let sizes = await Product.find({ ...category }).distinct(
-    "subProducts.sizes.size"
+    'subProducts.sizes.size'
   );
-  let details = await Product.find({ ...category }).distinct("details");
-  let stylesDb = filterArray(details, "Style");
-  let patternsDb = filterArray(details, "Pattern Type");
-  let materialsDb = filterArray(details, "Material");
+  let details = await Product.find({ ...category }).distinct('details');
+  let stylesDb = filterArray(details, 'Style');
+  let patternsDb = filterArray(details, 'Pattern Type');
+  let materialsDb = filterArray(details, 'Material');
   let styles = removeDuplicates(stylesDb);
   let patterns = removeDuplicates(patternsDb);
   let materials = removeDuplicates(materialsDb);
@@ -536,8 +537,8 @@ export async function getServerSideProps(ctx) {
       materials,
       paginationCount: Math.ceil(totalProducts / pageSize),
       country: {
-        name: "Morocco",
-        flag: "https://cdn-icons-png.flaticon.com/512/197/197551.png?w=360",
+        name: 'Morocco',
+        flag: 'https://cdn-icons-png.flaticon.com/512/197/197551.png?w=360',
       },
     },
   };
